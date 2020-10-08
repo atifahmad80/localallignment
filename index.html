@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <title>MY Web</title>
+</head>
+<body class="container">
+    <div class="col-12">
+        <div class="col-6">
+            <label for="">DNA-1</label>
+            <input type="text" id="input1" class="col-12">
+        </div>
+        <div class="col-6">
+            <label for="">DNA-2</label>
+            <input type="text" id="input2" class="col-12">
+        </div>
+        <div class="col-6">
+            <label for="">Gap Score</label>
+            <input type="text" id="gapS" value="0" class="col-12">
+        </div>
+        <div class="col-6">
+            <label for="">Match Score</label>
+            <input type="text" id="matchS" value="0" class="col-12">
+        </div>
+        <div class="col-6">
+            <label for="">MisMatch Score</label>
+            <input type="text" id="mismatchS" value="0" class="col-12">
+        </div>
+    </div>
+    
+    <input onclick="array()" type="submit">
+
+    <table  class="table table-bordered">
+        <tbody id="trow" >
+            
+        </tbody>
+    </table>
+    <footer>
+        <h5>Developed By</h5>
+        <h4>Atif Ahmad</h4>
+    </footer>
+
+
+    
+    
+</body>
+</html>
+
+
+<script>
+    var match=0;
+    var missmatch=0;
+    var gap=0;
+    function array(){
+        document.getElementById('trow').innerHTML = '';
+
+        var x=document.getElementById("input1").value.length;
+        var y=document.getElementById("input2").value.length;
+
+
+        // console.log(document.getElementById("matchS").value);
+        // console.log(document.getElementById("mismatchS").value);
+        // console.log(document.getElementById("gapS").value);
+        var val=10;
+        match=Number(document.getElementById("matchS").value);
+        missmatch=Number(document.getElementById("mismatchS").value);
+        gap=Number(document.getElementById("gapS").value);
+
+        var valx="";
+        var z=new Array(x+1);
+        z[0]=new Array(y+1);
+
+
+
+
+        var para = document.createElement("tr");
+        for(var i=0;i<y+2;i++){
+            if(i==0)
+            {
+                valx="";
+            }
+            else if(i==1)
+            {
+                valx="-";
+                z[0][i-1]=0;
+            }
+            else{
+                valx=document.getElementById("input2").value[i-2];
+                z[0][i-1]=0;
+            }
+            var header = document.createElement("th");
+            var headertext=document.createTextNode(valx);
+            header.appendChild(headertext);
+            para.appendChild(header);
+            var element = document.getElementById("trow");
+            element.appendChild(para);
+        }
+
+        for(var i=1;i<x+2;i++){
+            
+            if(i==1)
+            {
+                valx="-";
+            }
+            else{
+                valx=document.getElementById("input1").value[i-2];
+                z[i-1]=new Array(y+1);
+                z[i-1][0]=0;
+            }
+            var para = document.createElement("tr");
+            var data = document.createElement("th");
+            var node = document.createTextNode(valx);
+            data.appendChild(node);
+            para.appendChild(data);
+            var element = document.getElementById("trow");
+            element.appendChild(para);
+
+            // console.log(z);
+
+            for(var j=1;j<y+2;j++)
+            {
+                if(i==1||j==1)
+                {
+                    val=0;
+                }
+                else{
+                    val=Math.max((z[i-1][j-2]+gap),(z[i-2][j-1]+gap),(z[i-2][j-2]+matchOrNot(i,j)),0);
+                    z[i-1][j-1]=val;
+                }
+                var data = document.createElement("td");
+                var node = document.createTextNode(val);
+                data.appendChild(node);
+                para.appendChild(data);
+                var element = document.getElementById("trow");
+                element.appendChild(para);
+                
+            }
+        }
+        
+    }
+
+    function matchOrNot(i,j){
+        v1=document.getElementById("input1").value[i-2];
+        v2=document.getElementById("input2").value[j-2];
+        if(v1==v2){
+            console.log(match);
+            return match;
+        }
+        else{
+            return missmatch;
+        }
+    }
+</script>
