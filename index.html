@@ -10,27 +10,27 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <title>MY Web</title>
 </head>
-<body class="container">
+<body class="container" style="padding-bottom: 100px;min-height: 100vh; position: relative;">
     <div class="col-12">
         <div class="col-6">
             <label for="">DNA-1</label>
-            <input type="text" id="input1" class="col-12">
+            <input type="text" id="input1"  value="ATACGACTAA" class="col-12">
         </div>
         <div class="col-6">
             <label for="">DNA-2</label>
-            <input type="text" id="input2" class="col-12">
+            <input type="text" id="input2" value="AACCGACAATA" class="col-12">
         </div>
         <div class="col-6">
             <label for="">Gap Score</label>
-            <input type="text" id="gapS" value="0" class="col-12">
+            <input type="text" id="gapS" value="-3" class="col-12">
         </div>
         <div class="col-6">
             <label for="">Match Score</label>
-            <input type="text" id="matchS" value="0" class="col-12">
+            <input type="text" id="matchS" value="2" class="col-12">
         </div>
         <div class="col-6">
             <label for="">MisMatch Score</label>
-            <input type="text" id="mismatchS" value="0" class="col-12">
+            <input type="text" id="mismatchS" value="-2" class="col-12">
         </div>
     </div>
     
@@ -41,15 +41,17 @@
             
         </tbody>
     </table>
-    <footer>
-        <h5>Developed By</h5>
-        <h4>Atif Ahmad</h4>
-    </footer>
 
+    <div id="Sequence">
 
-    
+    </div>
     
 </body>
+    
+<footer class="mt-auto" style="position: absolute; bottom: 10px">
+    <h5>Developed By</h5>
+    <h4>Atif Ahmad</h4>
+</footer>
 </html>
 
 
@@ -58,15 +60,10 @@
     var missmatch=0;
     var gap=0;
     function array(){
-        document.getElementById('trow').innerHTML = '';
 
         var x=document.getElementById("input1").value.length;
         var y=document.getElementById("input2").value.length;
-
-
-        // console.log(document.getElementById("matchS").value);
-        // console.log(document.getElementById("mismatchS").value);
-        // console.log(document.getElementById("gapS").value);
+        
         var val=10;
         match=Number(document.getElementById("matchS").value);
         missmatch=Number(document.getElementById("mismatchS").value);
@@ -74,13 +71,65 @@
 
         var valx="";
         var z=new Array(x+1);
-        z[0]=new Array(y+1);
 
 
 
 
         var para = document.createElement("tr");
-        for(var i=0;i<y+2;i++){
+        
+        for(var i=0;i<x+1;i++){
+            
+            z[i]=new Array(y+1);
+
+            for(var j=0;j<y+1;j++)
+            {
+                if(i==0||j==0)
+                {
+                    z[i][j]=0;
+                }
+                else{
+                    val=Math.max((z[i][j-1]+gap),(z[i-1][j]+gap),(z[i-1][j-1]+matchOrNot(i,j)),0);
+                    z[i][j]=val;
+                }
+            }
+        }
+        var a=0;
+        var b=0;
+
+        for(var i=0;i<z.length;i++)
+        {
+            for(var j=0;j<z[i].length;j++)
+            {
+                if(z[a][b]<z[i][j])
+                {
+                    a=i;
+                    b=j;
+                }
+            }
+
+        }
+        drawTable(z);
+        getSequence(z,a,b);
+    }
+
+    function matchOrNot(i,j){
+        v1=document.getElementById("input1").value[i-1];
+        v2=document.getElementById("input2").value[j-1];
+        if(v1==v2){
+            console.log(match);
+            return match;
+        }
+        else{
+            return missmatch;
+        }
+    }
+
+    function drawTable(z){
+        document.getElementById('trow').innerHTML = '';
+        var valx="";
+        var para = document.createElement("tr");
+        
+        for(var i=0;i<z[0].length+1;i++){
             if(i==0)
             {
                 valx="";
@@ -88,11 +137,9 @@
             else if(i==1)
             {
                 valx="-";
-                z[0][i-1]=0;
             }
             else{
                 valx=document.getElementById("input2").value[i-2];
-                z[0][i-1]=0;
             }
             var header = document.createElement("th");
             var headertext=document.createTextNode(valx);
@@ -102,16 +149,13 @@
             element.appendChild(para);
         }
 
-        for(var i=1;i<x+2;i++){
-            
+        for(var i=1;i<z.length+1;i++){
             if(i==1)
             {
                 valx="-";
             }
             else{
                 valx=document.getElementById("input1").value[i-2];
-                z[i-1]=new Array(y+1);
-                z[i-1][0]=0;
             }
             var para = document.createElement("tr");
             var data = document.createElement("th");
@@ -121,18 +165,10 @@
             var element = document.getElementById("trow");
             element.appendChild(para);
 
-            // console.log(z);
 
-            for(var j=1;j<y+2;j++)
+            for(var j=0;j<z[i-1].length;j++)
             {
-                if(i==1||j==1)
-                {
-                    val=0;
-                }
-                else{
-                    val=Math.max((z[i-1][j-2]+gap),(z[i-2][j-1]+gap),(z[i-2][j-2]+matchOrNot(i,j)),0);
-                    z[i-1][j-1]=val;
-                }
+                val=z[i-1][j];
                 var data = document.createElement("td");
                 var node = document.createTextNode(val);
                 data.appendChild(node);
@@ -143,17 +179,60 @@
             }
         }
         
+        
     }
 
-    function matchOrNot(i,j){
-        v1=document.getElementById("input1").value[i-2];
-        v2=document.getElementById("input2").value[j-2];
-        if(v1==v2){
-            console.log(match);
-            return match;
+    function getSequence(array,a,b){
+        var s1=[];
+        var s2=[];
+
+        var max=array[a][b];
+
+        while(max!=0){
+            
+            if(array[a][b]-gap==array[a-1][b]){
+                max=array[a-1][b];
+                s1.push(document.getElementById("input1").value[a-1])
+                s2.push("-")
+                a--;
+                console.log("Above ",array[a][b]);
+            }
+            else if(array[a][b]-gap==array[a][b-1]){
+                max=array[a][b-1];
+                s1.push("-");
+                s2.push(document.getElementById("input2").value[b-1]);
+                b--;
+                console.log("Left ",array[a][b]);
+            }
+            else if(array[a][b]-match==array[a-1][b-1]){
+                max=array[a-1][b-1];
+                s1.push(document.getElementById("input1").value[a-1])
+                s2.push(document.getElementById("input2").value[b-1]);
+                a--;
+                b--;
+                console.log("match ",array[a][b]);
+            }
+            else if(array[a][b]-missmatch==array[a-1][b-1]){
+                max=array[a-1][b-1];
+                s1.push(document.getElementById("input1").value[a-1])
+                s2.push(document.getElementById("input2").value[b-1]);
+                a--;
+                b--;
+                console.log("mis ",array[a][b]);
+            }
         }
-        else{
-            return missmatch;
-        }
+
+
+        var h1=document.createElement("h2");
+        var text1=document.createTextNode("DNA-1: "+s1.reverse());
+        h1.appendChild(text1);
+        var h2=document.createElement("h2");
+        var text2=document.createTextNode("DNA-2: "+s2.reverse());
+        h2.appendChild(text2);
+
+        var div=document.getElementById("Sequence");
+        div.appendChild(h1);
+        div.appendChild(h2);
+        
     }
 </script>
