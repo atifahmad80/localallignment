@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <title>MY Web</title> -->
+</head>
+<body class="container" style="padding-bottom: 100px;min-height: 100vh; position: relative;">
+    <!-- <div class="col-12">
+        <div class="col-6">
+            <label for="">DNA-1</label>
+            <input type="text" id="input1"   class="col-12">
+        </div>
+        <div class="col-6">
+            <label for="">DNA-2</label>
+            <input type="text" id="input2"  class="col-12">
+        </div>
+        <div class="col-6">
+            <label for="">Gap Score</label>
+            <input type="text" id="gapS" value="0" class="col-12">
+        </div>
+        <div class="col-6">
+            <label for="">Match Score</label>
+            <input type="text" id="matchS" value="0" class="col-12">
+        </div>
+        <div class="col-6">
+            <label for="">MisMatch Score</label>
+            <input type="text" id="mismatchS" value="0" class="col-12">
+        </div>
+    </div>
+    
+    <input onclick="main()" type="submit">
+
+    <table  class="table table-bordered">
+        <tbody id="trow" >
+            
+        </tbody>
+    </table>
+
+    <div id="Sequence">
+
+    </div> -->
+    
+</body>
+    
+<footer class="mt-auto" style="position: absolute; bottom: 10px">
+    <h5>Developed By</h5>
+    <h4>Atif Ahmad</h4>
+</footer>
+</html>
+
+
+<script>
+
+
+
+    var min=999;
+    var mini=0;
+    var minj=0;
+
+    // var data=[[0,5,4,7,6,8],[5,0,7,10,9,11],[4,7,0,7,6,8],[7,10,7,0,5,9],[6,9,6,5,0,8],[8,11,8,9,8,0]]
+    // var data=[[0,3,6,5,7],[3,0,7,6,8],[6,7,0,5,9],[5,6,5,0,8],[7,8,9,8,0]]
+    // var data=[[0,5,4,6],[5,0,5,9],[4,5,0,8],[6,9,8,0],];
+
+
+    var data=[[0,5,4,7,6,8],[5,0,7,10,9,11],[4,7,0,7,6,8],[7,10,7,0,5,9],[6,9,6,5,0,8],[8,11,8,9,8,0]]
+
+    var s=[];
+    console.log("step 1");
+
+    for (var i =0;i< data.length ;  i++) {
+        var t=0;
+        var smsg="";
+        for (var j =0;j< data[i].length ;  j++) {
+        	smsg=smsg+data[i][j]+"+";
+            t=t+data[i][j];
+        }
+        s.push(t/(data.length-2));
+    	console.log(smsg+"/"+(data.length-2));
+
+    }
+    console.log("s[] ");
+    console.log(s);
+
+    console.log("step 2");
+
+    var m=[];
+    for (var i =0;i< data.length ;  i++) {
+        var t=0;
+        var smsg="";
+
+        for (var j =0;j< data[i].length ;  j++) {
+            if(i<j){
+
+                if(data[i][j]-s[i]-s[j]<min){
+                    min=data[i][j]-s[i]-s[j];
+                    mini=i;
+                    minj=j;
+                }
+                console.log(data[i][j]+" - "+s[i]+" - "+s[j]);
+
+                m.push(data[i][j]-s[i]-s[j])
+            }
+        }
+
+    }
+    console.log("m[] ");
+    console.log(m);
+    
+
+    console.log("step 3");
+
+    console.log(("data[mini][minj]/2)+((s[mini]-s[minj])/2"));
+    console.log("( "+data[mini][minj] +"/ 2) + "+"("+"("+s[mini]+" - "+s[minj]+")"+"/2"+")");
+    console.log((data[mini][minj]/2)+((s[mini]-s[minj])/2));
+    console.log(("data[mini][minj]/2)+((s[minj]-s[mini])/2"));
+    console.log("( "+data[mini][minj] +"/ 2) + "+"("+"("+s[minj]+" - "+s[mini]+")"+"/2"+")");
+    console.log((data[mini][minj]/2)+((s[minj]-s[mini])/2));
+    console.log("[mini]");
+    console.log(mini);
+    console.log("[minj]");
+    console.log(minj);
+    console.log("s[mini]");
+    console.log(s[mini]);
+    console.log("s[minj]");
+    console.log(s[minj]);
+    console.log("data[mini][minj]/2");
+    console.log(data[mini][minj]/2);
+    console.log(mini);
+    console.log(minj);
+    console.log("min");
+    console.log(min);
+
+
+    console.log("step 4");
+
+    var newTable=new Array(data.length-1);
+
+    for (var i =1;i< data.length ;  i++) {
+        var t=0;
+        newTable[i-1]=[]//new Array(data[i].length-1);
+        for (var j =1;j< data[i].length ;  j++) {
+            if(i>j){
+                if( i!=mini&& j!=mini&& i!=minj&& j!=minj){
+                    newTable[i-1].push(data[i][j]);
+                }
+                else{
+                    newTable[i-1].push((data[i][mini]+data[i][minj]-data[mini][minj])/2);
+                }
+            }
+            else{
+                newTable[i-1].push(0);
+                
+            }
+        }
+
+    }
+    console.log(newTable);
+
+    for (var i =0;i< newTable.length ;  i++) {
+        for (var j =0;j< newTable[i].length ;  j++) {
+            if(i<j){
+                newTable[i][j]=newTable[j][i]
+            }
+             
+        }
+
+    }
+    console.log(newTable);
+    var res="";
+    for (var j =0;j< newTable.length ;  j++) {
+        res=res+"["+newTable[j]+"],";
+        // console.log(newTable[j]);
+    }
+
+    console.log("["+res+"]");
+</script>
