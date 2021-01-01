@@ -34,7 +34,7 @@
         </div>
     </div>
     
-    <input onclick="array()" type="submit">
+    <input onclick="main()" type="submit">
 
     <table  class="table table-bordered">
         <tbody id="trow" >
@@ -59,7 +59,7 @@
     var match=0;
     var missmatch=0;
     var gap=0;
-    function array(){
+    function main(){
 
         var x=document.getElementById("input1").value.length;
         var y=document.getElementById("input2").value.length;
@@ -71,39 +71,45 @@
 
         var valx="";
         var z=new Array(x+1);
+
+
+
+
         var para = document.createElement("tr");
         
         for(var i=0;i<x+1;i++){
+            
             z[i]=new Array(y+1);
+
             for(var j=0;j<y+1;j++)
             {
                 if(i==0||j==0)
                 {
-                    z[i][j]=0;
+                    z[i][j]=((i*(-2))+(j*(-2)));
                 }
                 else{
-                    val=Math.max((z[i][j-1]+gap),(z[i-1][j]+gap),(z[i-1][j-1]+matchOrNot(i,j)),0);
+                    val=Math.max((z[i][j-1]+gap),(z[i-1][j]+gap),(z[i-1][j-1]+matchOrNot(i,j)));
                     z[i][j]=val;
                 }
             }
         }
-        var a=0;
-        var b=0;
+        // var a=0;
+        // var b=0;
 
-        for(var i=0;i<z.length;i++)
-        {
-            for(var j=0;j<z[i].length;j++)
-            {
-                if(z[a][b]<=z[i][j])
-                {
-                    a=i;
-                    b=j;
-                }
-            }
+        // for(var i=0;i<z.length;i++)
+        // {
+        //     for(var j=0;j<z[i].length;j++)
+        //     {
+        //         if(z[a][b]<=z[i][j])
+        //         {
+        //             a=i;
+        //             b=j;
+        //         }
+        //     }
 
-        }
+        // }
         drawTable(z);
-        getSequence(z,a,b);
+        getSequence(z,x,y);
     }
 
     function matchOrNot(i,j){
@@ -183,7 +189,7 @@
 
         var max=array[a][b];
 
-        while(max!=0){
+        while(a!=0 && b!=0){
             
             if(array[a][b]-gap==array[a-1][b]){
                 max=array[a-1][b];
